@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-background text-slate-100;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.glass-surface {
+  @apply bg-surface/80 backdrop-blur-xl border border-slate-700/60 shadow-lg;
+}
+
