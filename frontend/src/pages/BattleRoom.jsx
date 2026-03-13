@@ -42,17 +42,23 @@ function BattleRoom() {
     }
     const socket = getSocket();
 
-    const handleConnect = () => {
+    const joinRoom = () => {
       setSocketConnected(true);
       socket.emit('room:join', { roomId, username: user.username });
     };
     const handleDisconnect = () => setSocketConnected(false);
 
+    if (socket.connected) {
+      joinRoom();
+    } else {
+      socket.connect();
+    }
+
     if (!socket.connected) {
       socket.connect();
     }
 
-    socket.on('connect', handleConnect);
+    socket.on('connect', joinRoom);
     socket.on('disconnect', handleDisconnect);
 
     socket.on('room:update', (payload) => {
@@ -93,7 +99,7 @@ function BattleRoom() {
 
     return () => {
       socket.emit('room:leave', { roomId, username: user.username });
-      socket.off('connect', handleConnect);
+      socket.off('connect', joinRoom);
       socket.off('disconnect', handleDisconnect);
       socket.off('room:update');
       socket.off('battle:start');
@@ -104,13 +110,7 @@ function BattleRoom() {
     };
   }, [roomId, navigate, user]);
 
-  useEffect(() => {
-    if (!isRunning) return;
-    const id = setInterval(() => {
-      setSecondsRemaining((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(id);
-  }, [isRunning]);
+  
 
   const handleCodeChange = (code) => {
     setMyCode(code);

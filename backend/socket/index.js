@@ -19,7 +19,6 @@ export function registerSocketHandlers(io) {
   io.on('connection', (socket) => {
     socket.on('room:join', async ({ roomId, username }) => {
       if (!roomId || !username) return;
-
       socket.join(roomId);
       const room = ROOM_STATE.get(roomId) || {
         players: [],
