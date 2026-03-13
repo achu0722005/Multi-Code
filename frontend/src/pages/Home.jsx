@@ -72,6 +72,10 @@ function Home() {
         <Link to="/join" className="hover:text-accent transition-colors">
           Join a friend&apos;s room
         </Link>
+        <span className="text-slate-600">•</span>
+        <Link to="https://www.linkedin.com/in/akshay-nv-b2aa81294/" className="hover:text-accent transition-colors">
+          Meet the developer ❤️
+        </Link>
       </div>
     </div>
   );

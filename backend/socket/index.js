@@ -43,8 +43,9 @@ export function registerSocketHandlers(io) {
         players: room.players.map((p) => ({ username: p.username }))
       });
 
-      if (room.players.length === 2 && !room.startTime) {
+      if (room.players.length === 2 && !room.startTime && !room.problemId) {
         // start battle
+        room.problemId = 'initializing';
         let battle = await Battle.findOne({ roomId });
         if (!battle) {
           battle = await Battle.create({
@@ -60,6 +61,8 @@ export function registerSocketHandlers(io) {
         if (count > 0) {
           const random = Math.floor(Math.random() * count);
           const problem = await Problem.findOne().skip(random);
+
+          // 3. Save the specific problem and start time to the room object
           battle.problem = problem._id;
           battle.state = 'in_progress';
           battle.startedAt = new Date();
@@ -71,9 +74,10 @@ export function registerSocketHandlers(io) {
             difficulty: problem.difficulty
           };
           room.problemId = problem._id.toString();
+          room.startTime = Date.now(); // This enables the timer broadcaster
         }
 
-        room.startTime = Date.now();
+        // 4. Update the ROOM_STATE and broadcast the start signal
         ROOM_STATE.set(roomId, room);
 
         io.to(roomId).emit('battle:start', {

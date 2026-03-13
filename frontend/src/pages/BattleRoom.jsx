@@ -62,11 +62,15 @@ function BattleRoom() {
     socket.on('disconnect', handleDisconnect);
 
     socket.on('room:update', (payload) => {
-      setPlayers({
-        me: payload.players.find((p) => p.username === user.username) || null,
-        opponent: payload.players.find((p) => p.username !== user.username) || null
-      });
-    });
+  setPlayers(prev => ({
+    me: payload.players.find((p) => p.username === user.username) || prev.me,
+    opponent: payload.players.find((p) => p.username !== user.username) || prev.opponent
+  }));
+  if (payload.problem) {
+    setProblem(payload.problem);
+    setProblemId(payload.problemId);
+  }
+});
 
     socket.on('battle:start', ({ problem: p, problemId: pid, remainingSeconds }) => {
       setProblem(p);
