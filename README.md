@@ -1,4 +1,4 @@
-# Multicode – Real-time Multiplayer Coding Battles
+# Multicode – Real-time Multiplayer Coding Battles To Compete With Your Friends
 
 Multicode is a full-stack web application where two players join a room, receive the same coding problem, and race to be the first to pass all test cases.
 
